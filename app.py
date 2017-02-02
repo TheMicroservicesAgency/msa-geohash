@@ -1,11 +1,18 @@
+#
+# References
+# https://en.wikipedia.org/wiki/Geohash
+# http://geojson.org/geojson-spec.html
+# http://www.macwright.org/2015/03/23/geojson-second-bite.html
+#
 from flask import Flask, jsonify, redirect, request
 import pygeohash as pygeohash
-from geojson import Point, Polygon
+import geojson
+import json
 
 app = Flask(__name__)
 
 
-@app.route('/geohash/encode')
+@app.route('/geohash/encode', methods=['GET'])
 def encode():
 
     lat = request.args.get("lat")
@@ -42,6 +49,39 @@ def encode():
     return response
 
 
+@app.route('/geohash/encode', methods=['POST'])
+def encode_from_geojson():
+
+    try:
+        data = request.json
+
+        if data['type'] == 'Point':
+
+            # remember that geohash uses lat,lon
+            # but geojson uses lon,lat
+            lon = data['coordinates'][0]
+            lat = data['coordinates'][1]
+
+            result = pygeohash.encode(lat, lon)
+
+            data = {'geohash': result}
+            response = jsonify(data)
+            return response
+
+        else:
+            msg = {'ERROR': 'Geojson type is not a Point'}
+            return jsonify(msg), 400
+
+    except Exception as e:
+        print(e)
+        msg = {'ERROR': 'Could not parse geojson.'}
+        return jsonify(msg), 400
+
+
+    return ""
+
+
+
 @app.route('/geohash/decode/<geohash>')
 def decode(geohash):
 
@@ -63,24 +103,25 @@ def decode(geohash):
             print(lat_err)
             print(lon_err)
 
-            # 1 ---- 2
+            # 1 ---- 4
             # |      |
-            # 4 ---- 3
+            # 2 ---- 3
             #
-            box1 = (lat - lat_err, lon + lon_err)
-            box2 = (lat + lat_err, lon + lon_err)
-            box3 = (lat + lat_err, lon - lon_err)
-            box4 = (lat - lat_err, lon - lon_err)
+            box1 = (lon - lon_err, lat + lat_err)
+            box2 = (lon - lon_err, lat - lat_err)
+            box3 = (lon + lon_err, lat - lat_err)
+            box4 = (lon + lon_err, lat + lat_err)
 
             print(box1)
             print(box2)
             print(box3)
             print(box4)
 
-            response = jsonify(Polygon([[box1, box2, box3, box4, box1]]))
+            response = jsonify(geojson.Polygon([[box1, box2, box3, box4, box1]]))
             return response
 
-        except:
+        except Exception as e:
+            print(e)
             msg = {'ERROR': 'Could not decode the geohash'}
             return jsonify(msg), 400
 
@@ -89,13 +130,17 @@ def decode(geohash):
         try:
             # Returning two float with latitude and longitude
             # containing only relevant digits and with trailing zeroes removed
-            result = pygeohash.decode(geohash)
+            lat, lon = pygeohash.decode(geohash)
+
+            #lat = result[0]
+            #lon = result[1]
 
             # lat, lon to geojson point
-            response = jsonify(Point(result))
+            response = jsonify(geojson.Point([lon, lat]))
             return response
 
-        except:
+        except Exception as e:
+            print(e)
             msg = {'ERROR': 'Could not decode the geohash'}
             return jsonify(msg), 400
 
