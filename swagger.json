@@ -1,17 +1,236 @@
 {
     "swagger": "2.0",
     "info": {
-        "version": "1.0.0",
-        "title": "msa-template-python",
-        "description": "An exmple of a simple Python microservice"
+        "title": "MSA-GEOHASH",
+        "description": "Geohashing as a service",
+        "version": "1.0.0"
     },
+    "produces": [
+        "application/json"
+    ],
     "paths": {
-        "/hello-world": {
+        "/ms/version": {
             "get": {
-                "description": "Returns \"Hello world\"\n",
+                "tags": [
+                    "msa-standard"
+                ],
+                "summary": "Return the microservice version number",
                 "responses": {
                     "200": {
-                        "description": "Successful response"
+                        "description": "the version number"
+                    }
+                }
+            }
+        },
+        "/ms/name": {
+            "get": {
+                "tags": [
+                    "msa-standard"
+                ],
+                "summary": "Return the microservice name",
+                "responses": {
+                    "200": {
+                        "description": "the name"
+                    }
+                }
+            }
+        },
+        "/ms/readme.md": {
+            "get": {
+                "tags": [
+                    "msa-standard"
+                ],
+                "summary": "Return the microservice readme in markdown",
+                "responses": {
+                    "200": {
+                        "description": "the readme in markdown"
+                    }
+                }
+            }
+        },
+        "/ms/readme.html": {
+            "get": {
+                "tags": [
+                    "msa-standard"
+                ],
+                "summary": "Return the microservice readme in html",
+                "responses": {
+                    "200": {
+                        "description": "the readme in html"
+                    }
+                }
+            }
+        },
+        "/swagger/swagger.json": {
+            "get": {
+                "tags": [
+                    "msa-standard"
+                ],
+                "summary": "Return the microservice Swagger JSON file",
+                "responses": {
+                    "200": {
+                        "description": "the Swagger JSON file"
+                    }
+                }
+            }
+        },
+        "/swagger/#": {
+            "get": {
+                "tags": [
+                    "msa-standard"
+                ],
+                "summary": "Return the Swagger-UI page",
+                "responses": {
+                    "200": {
+                        "description": "the Swagger-UI page"
+                    }
+                }
+            }
+        },
+        "/nginx/stats.json": {
+            "get": {
+                "tags": [
+                    "msa-standard"
+                ],
+                "summary": "Return stats about Nginx in JSON",
+                "responses": {
+                    "200": {
+                        "description": "the stats about Nginx in JSON"
+                    }
+                }
+            }
+        },
+        "/nginx/stats.html": {
+            "get": {
+                "tags": [
+                    "msa-standard"
+                ],
+                "summary": "Return a dashboard displaying the stats from Nginx",
+                "responses": {
+                    "200": {
+                        "description": "the Nginx stats dashboard"
+                    }
+                }
+            }
+        },
+        "/geohash/encode": {
+            "get": {
+                "tags": [
+                    "msa-geohash"
+                ],
+                "summary": "Encodes a given pair of coordinates into a geohash",
+                "parameters": [
+                    {
+                        "name": "lat",
+                        "in": "query",
+                        "description": "the latitude, ex \"45.536175\"",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "lon",
+                        "in": "query",
+                        "description": "the longitude, ex \"-73.620758\"",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "the geohash"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "msa-geohash"
+                ],
+                "summary": "Encodes a given pair of coordinates (in geojson format) into a geohash",
+                "parameters": [
+                    {
+                        "name": "geojson point",
+                        "in": "body",
+                        "description": "a geojson point",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Point"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "the geohash"
+                    }
+                }
+            }
+        },
+        "/geohash/decode/{geohash}": {
+            "get": {
+                "tags": [
+                    "msa-geohash"
+                ],
+                "summary": "Decodes a geohash into a pair of coordinates (returns a geojson Point or Polygon)",
+                "parameters": [
+                    {
+                        "name": "geohash",
+                        "in": "path",
+                        "description": "the geohash to decode, ex \"f25eh9wgrypy\"",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "exact",
+                        "in": "query",
+                        "description": "boolean to enable exact decoding, ex \"true\"",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "the decoded geohash as a geojson Point or Polygon"
+                    }
+                }
+            }
+        },
+        "/geohash/precision/{geohash}": {
+            "get": {
+                "tags": [
+                    "msa-geohash"
+                ],
+                "summary": "Returns the precision of a given geohash, in meters",
+                "parameters": [
+                    {
+                        "name": "geohash",
+                        "in": "path",
+                        "description": "the geohash to evaluate, ex \"f25eh9wgrypy\"",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "the precision of the given geohash"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Point": {
+            "type": "object",
+            "required": [
+                "type",
+                "coordinates"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items": {
+                        "type": "number"
                     }
                 }
             }
