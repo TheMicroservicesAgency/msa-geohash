@@ -98,11 +98,6 @@ def decode(geohash):
             # error for longitude (as a positive number).
             lat, lon, lat_err, lon_err = pygeohash.decode_exactly(geohash)
 
-            print(lat)
-            print(lon)
-            print(lat_err)
-            print(lon_err)
-
             # 1 ---- 4
             # |      |
             # 2 ---- 3
@@ -111,11 +106,6 @@ def decode(geohash):
             box2 = (lon - lon_err, lat - lat_err)
             box3 = (lon + lon_err, lat - lat_err)
             box4 = (lon + lon_err, lat + lat_err)
-
-            print(box1)
-            print(box2)
-            print(box3)
-            print(box4)
 
             response = jsonify(geojson.Polygon([[box1, box2, box3, box4, box1]]))
             return response
