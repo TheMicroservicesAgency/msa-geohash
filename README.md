@@ -67,7 +67,7 @@ Geohashes can be shortened to modify the area they cover, this can be evaluated 
       }
     }
 
-By default the /decode function will return the center of the geohash area, however it's possible to get a more accurate decoding with the `exact=true` parameter. With this parameter a geojson polygon will be returned instead of a point, taking into account the margin of error of the geohash :
+By default the /decode function will return the center of the geohash area, however it's possible to get a more accurate decoding with the *exact=true* parameter. With this parameter a geojson polygon will be returned instead of a point, taking into account the margin of error of the geohash :
 
     $ curl 'http://localhost:9907/geohash/decode/f25eh9?exact=true'
     {
