@@ -101,21 +101,22 @@ By default the /decode function will return the center of the geohash area, howe
 
 ## Endpoints
 
-- [/geohash/encode/?lat=XX.XX&lon=XX.XX ](/geohash/encode?lat=45.53617&lon=-73.62075) Compute a geohash from the given lat,lon
-- [/geohash/decode/:geohash](/geohash/decode/f25eh9x52jq4) Decode a geohash, returns a geojson point
-- [/geohash/decode/:geohash?exact=true](/geohash/decode/f25eh9x52jq4) Decodes a geohash, return a geojson polygon
-- [/geohash/precision/:geohash](/geohash/precision/f25eh9x52jq4) Estimate the precision of a geohash
+- GET [/geohash/encode/?lat=XX.XX&lon=XX.XX ](/geohash/encode?lat=45.53617&lon=-73.62075) Computes a geohash from the given lat,lon
+- POST [/geohash/encode]() Computes a geohash from the given geojson point
+- GET  [/geohash/decode/:geohash](/geohash/decode/f25eh9x52jq4) Decode a geohash, returns a geojson point
+- GET  [/geohash/decode/:geohash?exact=true](/geohash/decode/f25eh9x52jq4) Decodes a geohash, return a geojson polygon
+- GET  [/geohash/precision/:geohash](/geohash/precision/f25eh9x52jq4) Estimate the precision of a geohash
 
 ## Standard endpoints
 
-- [/ms/version](/ms/version) : returns the version number
-- [/ms/name](/ms/name) : returns the name
-- [/ms/readme.md](/ms/readme.md) : returns the readme (this file)
-- [/ms/readme.html](/ms/readme.html) : returns the readme as html
-- [/swagger/swagger.json](/swagger/swagger.json) : returns the swagger api documentation
-- [/swagger/#/](/swagger/#/) : returns swagger-ui displaying the api documentation
-- [/nginx/stats.json](/nginx/stats.json) : returns stats about Nginx
-- [/nginx/stats.html](/nginx/stats.html) : returns a dashboard displaying the stats from Nginx
+- GET [/ms/version](/ms/version) : returns the version number
+- GET [/ms/name](/ms/name) : returns the name
+- GET [/ms/readme.md](/ms/readme.md) : returns the readme in markdown
+- GET [/ms/readme.html](/ms/readme.html) : returns the readme as html
+- GET [/swagger/swagger.json](/swagger/swagger.json) : returns the swagger api documentation
+- GET [/swagger/#/](/swagger/#/) : returns swagger-ui displaying the api documentation
+- GET [/nginx/stats.json](/nginx/stats.json) : returns stats about Nginx
+- GET [/nginx/stats.html](/nginx/stats.html) : returns a dashboard displaying the stats from Nginx
 
 ## About
 
